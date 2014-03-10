@@ -56,6 +56,7 @@ os.system("mkdir /home/vagrant/.drush")
 os.system("echo \"" + drush_alias_file + "\" | tee -a /home/vagrant/.drush/aliases.drushrc.php")
 os.system("sudo chown -R vagrant:vagrant /home/vagrant/.drush")
 os.system("sudo drush -y dl registry_rebuild --destination=\"/home/vagrant/.drush\"")
+os.system("sudo chown -R vagrant:vagrant /home/vagrant/.drush/registry_rebuild")
 
 #setup a drupal sites directory in the vagrant home directory and symlink into sites directory
 if not args.skip_drupal_site_dir:
