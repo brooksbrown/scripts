@@ -46,7 +46,7 @@ os.system("sudo pear channel-discover pear.drush.org")
 os.system("sudo pear install drush/drush")
 
 drush_alias_file = ("<?php \n"
-					"\$aliases['" + args.site_domain + "'] = array(\n"
+					"\$aliases['vagrant'] = array(\n"
 					"  'root' => '" + args.drupal_docroot + "',\n"
 					"  'uri' => '" + args.site_domain + "',\n"
 					"  'db-url' => 'mysql://" + args.database_user + ":" + args.database_pass + "@localhost/" + args.database_name + "',\n"
