@@ -45,4 +45,4 @@ os.system("sudo rm -r " + default_vhost_file)
 os.system("sudo touch " + default_vhost_file)
 os.system("echo \"" + vhost_file + "\" | sudo tee -a " + default_vhost_file)
 
-os.system("sudo service apache2 reload")
+os.system("sudo service apache2 restart")
