@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# usage: ubuntu-lemp.sh [-h] [--root-mysql-pass ROOT_MYSQL_PASS]
+# usage: ubuntu-raring-lemp.sh [-h] [--root-mysql-pass ROOT_MYSQL_PASS]
 #                       [--php-version PHP_VERSION]
 #                       [--php-timezone PHP_TIMEZONE]
 # 
