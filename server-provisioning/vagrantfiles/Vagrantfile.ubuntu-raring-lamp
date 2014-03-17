@@ -8,8 +8,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :forwarded_port, guest: 80, host: 8080
 
   config.vm.synced_folder "../docroot", "/vagrant", type: "nfs"
-  config.vm.synced_folder "../database-deployments", "/vagrant-database-deployments" 
-  config.vm.synced_folder "../devbin", "/vagrant-devbin"
 
   config.vm.provider :virtualbox do |v|
   	v.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
