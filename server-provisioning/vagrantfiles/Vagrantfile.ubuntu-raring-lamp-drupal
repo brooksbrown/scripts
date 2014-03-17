@@ -1,0 +1,37 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "raring64"
+  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box"
+
+  config.vm.network "private_network", ip: "192.168.10.5"
+  config.vm.network :forwarded_port, guest: 80, host: 8080
+
+  config.vm.synced_folder "../docroot", "/vagrant", type: "nfs"
+  config.vm.synced_folder "../database-deployments", "/vagrant-database-deployments" 
+  config.vm.synced_folder "../devbin", "/vagrant-devbin"
+
+  config.vm.provider :virtualbox do |v|
+  	v.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+  	v.memory = 1024
+  end
+
+  config.vm.provision :shell, :inline => "echo -e '#{File.read("#{Dir.home}/.ssh/id_rsa")}' >> '/home/vagrant/.ssh/id_rsa'"
+  config.vm.provision :shell, :inline => "sudo locale-gen en_US.UTF-8"
+
+  config.vm.provision "shell" do |s|
+    s.path = "https://raw.github.com/brooksbrown/scripts/master/server-provisioning/ubuntu-raring-lamp.py"
+    s.args = "--root-mysql-pass vagrant"
+  end
+
+  config.vm.provision "shell" do |s|
+    s.path = "https://raw.github.com/brooksbrown/scripts/master/server-provisioning/ubuntu-drupal-default-a2vhost.py"
+    s.args = "--docroot /vagrant"
+  end
+
+  config.vm.provision "shell" do |s|
+  	s.path = "https://raw.github.com/brooksbrown/scripts/master/server-provisioning/vagrant-ubuntu-drupal.py"
+  	s.args = "/vagrant db root vagrant"
+  end
+end
+
