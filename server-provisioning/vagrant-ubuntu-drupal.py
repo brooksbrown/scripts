@@ -15,8 +15,7 @@
 #   -h, --help            show this help message and exit
 #   -dom SITE_DOMAIN, --site-domain SITE_DOMAIN
 #                        drupal site domain. this is used as the name 
-#   --skip-drupal-site-dir
-#                        flag to skip the creation and symlinking of a drupal
+#   --skip-drupal-site-dir #                        flag to skip the creation and symlinking of a drupal
 #                        site directory
 
 import os
@@ -39,18 +38,25 @@ parser.add_argument("--skip-drupal-site-dir", action="store_true", help="flag to
 
 args = parser.parse_args()
 
-#drush
+#variables
+local_site_symlink = args.drupal_docroot + "/sites/" + args.site_domain
+local_site_dir_name = "drupal-localhost"
+local_site_dir = "/home/vagrant/" + local_site_dir_name
+
+
+#install drush
 os.system("sudo apt-get update")
 os.system("sudo apt-get -y install php-pear")
 os.system("sudo pear channel-discover pear.drush.org")
 os.system("sudo pear install drush/drush")
 
+#setup drush alias
 drush_alias_file = ("<?php \n"
-					"\$aliases['vagrant'] = array(\n"
-					"  'root' => '" + args.drupal_docroot + "',\n"
-					"  'uri' => '" + args.site_domain + "',\n"
-					"  'db-url' => 'mysql://" + args.database_user + ":" + args.database_pass + "@localhost/" + args.database_name + "',\n"
-					");\n")
+		    "\$aliases['vagrant'] = array(\n"
+		    "  'root' => '" + args.drupal_docroot + "',\n"
+		    "  'uri' => '" + args.site_domain + "',\n"
+		    "  'db-url' => 'mysql://" + args.database_user + ":" + args.database_pass + "@localhost/" + args.database_name + "',\n"
+		    ");\n")
 
 os.system("mkdir /home/vagrant/.drush")
 os.system("echo \"" + drush_alias_file + "\" | tee -a /home/vagrant/.drush/aliases.drushrc.php")
@@ -60,8 +66,16 @@ os.system("sudo chown -R vagrant:vagrant /home/vagrant/.drush/registry_rebuild")
 
 #setup a drupal sites directory in the vagrant home directory and symlink into sites directory
 if not args.skip_drupal_site_dir:
-	local_site_dir_name = "drupal-localhost"
-	local_site_dir = "/home/vagrant/" + local_site_dir_name
+	#if site symlink location already exists
+	if os.path.exists(local_site_symlink):
+		#if symlink location is a link remove it 
+		if os.path.islink(local_site_symlink):
+			os.system("rm  " + local_site_symlink)
+		else:
+			args.skip_drupal_site_dir = True
+			os.system("echo \"drupal site directory already exists, skipping creation!")
+
+if not args.skip_drupal_site_dir:
 
 	os.system("mkdir " + local_site_dir)
 	os.system("cp " + args.drupal_docroot + "/sites/default/default.settings.php " + local_site_dir + "/settings.php")
@@ -78,6 +92,7 @@ if not args.skip_drupal_site_dir:
 
 	os.system("mkdir " + local_site_dir + "/files")
 	os.system("chown -R www-data:www-data " + local_site_dir + "/files")
+	os.system("chown -R www-data:www-data " + local_site_dir + "/settings.php")
 
 	os.system("ln -s " + local_site_dir + " " + args.drupal_docroot + "/sites/" + args.site_domain)
 
