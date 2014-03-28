@@ -19,7 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell, :inline => "sudo locale-gen en_US.UTF-8"
 
   config.vm.provision "shell" do |s|
-    s.path = "https://raw.github.com/brooksbrown/scripts/master/server-provisioning/ubuntu-raring-lamp.py"
+    s.path = "https://raw.github.com/brooksbrown/scripts/master/server-provisioning/ubuntu-lamp.py"
     s.args = "--root-mysql-pass vagrant"
   end
 
