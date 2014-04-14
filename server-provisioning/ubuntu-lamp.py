@@ -37,6 +37,12 @@ parser.add_argument(
 	default="America/New_York"
 )
 
+parser.add_argument(
+  "--php-memory",
+  help="memory string to use in apache's php.ini",
+  default="128M"
+)
+
 args = parser.parse_args()
 
 os.system("sudo apt-get update")
@@ -63,5 +69,9 @@ os.system("sudo apt-get install -y php5-mysql")
 tz_sed_pattern = "s@;date.timezone =.*@date.timezone = " + args.php_timezone +  "@"
 os.system("sudo sed -i \"" + tz_sed_pattern + "\" /etc/php5/apache2/php.ini")
 os.system("sudo sed -i \"" + tz_sed_pattern + "\" /etc/php5/cli/php.ini")
+
+#set php memory limit
+mem_limit_pattern = "s@memory_limit =.*@memory_limit = " + args.php_memory + "@"
+os.system("sudo sed -i \"" + tz_sed_pattern + "\" /etc/php5/apache2/php.ini")
 
 os.system("sudo service apache2 restart")
