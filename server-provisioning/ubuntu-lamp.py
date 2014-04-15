@@ -72,6 +72,6 @@ os.system("sudo sed -i \"" + tz_sed_pattern + "\" /etc/php5/cli/php.ini")
 
 #set php memory limit
 mem_limit_pattern = "s@memory_limit =.*@memory_limit = " + args.php_memory + "@"
-os.system("sudo sed -i \"" + tz_sed_pattern + "\" /etc/php5/apache2/php.ini")
+os.system("sudo sed -i \"" + mem_limit_pattern + "\" /etc/php5/apache2/php.ini")
 
 os.system("sudo service apache2 restart")
