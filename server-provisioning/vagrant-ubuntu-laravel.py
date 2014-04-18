@@ -16,6 +16,7 @@ parser.add_argument("database_pass")
 args = parser.parse_args()
 
 os.system("sudo apt-get install -y php5-mcrypt")
+os.system("sudo service php5-fpm restart")
 
 # create a nginx vhost
 vhost = ("server {\n"
